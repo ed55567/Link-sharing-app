@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
 
 const LinkManager = () => {
-  const [link, setLink] = useState('');
-  const [links, setLinks] = useState([]);
+  const [links, setLinks] = useState('');
+  const [newLink, setNewLink] = useState([]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLinks([...links, link]);
-    setLink('');
+  const addLink = () => {
+    if (newLink.trim() === '') {
+      return; // Prevent adding empty links
+    }
+    setLinks([...links, newLink]);
+    setNewLink('');
   };
-  
+
+  const deleteLink = (index) => {
+    const updatedLinks = links.filter((_, i) => i !== index);
+    setLinks(updatedLinks);
+  };
+
   return (
     <div>
       <h2>Link Manager</h2>
       <input
         type="text"
         placeholder="Enter a link"
-        value={link}
-        onChange={(e) => setLink(e.target.value)}
+        value={newLink}
+        onChange={(e) => setNewLink(e.target.value)}
       />
       <button onClick={addLink}>Add Link</button>
       <ul>
