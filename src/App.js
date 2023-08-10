@@ -1,5 +1,6 @@
 import React from "react";
 import LinkManager from "./components/LinkManager";
+import Links from "./components/Links";
 
 
 function App() {
