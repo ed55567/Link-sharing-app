@@ -3,14 +3,26 @@ import React, { useState } from 'react';
 const Links = () => {
     const [links, setLinks] = useState([]);
     const [newLink, setNewLink] = useState('');
-    
+    const [error, setError] = useState(''); 
+
+
+    const validateUrl = (url) => {
+      // regular expression for basic URL validation
+      const urlPattern = /^(https?:\/\/)?(www\.)?(\w+)(\.\w+)(\/\S*)?$/;
+       
+      return urlPattern.test(url);
+    };
 
     const addLink = () => {
         if (newLink.trim() === '') {
         setLinks([...links, newLink]);
         setNewLink('');
-    }
-};  
+        setError('');
+        } else {
+          setError('Invalid URL format');
+        }
+      }  
+    };  
 
 
 const deleteLink = (index) => {
