@@ -1,12 +1,11 @@
-import React from "react";
-import LinkManager from "./components/LinkManager";
-import Links from "./components/Links";
-
+// App.js
+import React from 'react';
+import Links from './components/Links';
 
 function App() {
   return (
     <div className="App">
-      <LinkManager />
+      <Links />
     </div>
   );
 }

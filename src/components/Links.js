@@ -1,36 +1,36 @@
+// Links.js
 import React, { useState } from 'react';
 
 const Links = () => {
-    const [links, setLinks] = useState([]);
-    const [newLink, setNewLink] = useState('');
-    const [error, setError] = useState(''); 
+  const [links, setLinks] = useState([]);
+  const [newLink, setNewLink] = useState('');
+  const [error, setError] = useState('');
 
+  const validateUrl = (url) => {
+    // Regular expression for basic URL validation
+    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w.-]*)*\/?$/;
 
-    const validateUrl = (url) => {
-      // regular expression for basic URL validation
-      const urlPattern = /^(https?:\/\/)?(www\.)?(\w+)(\.\w+)(\/\S*)?$/;
-       
-      return urlPattern.test(url);
-    };
+    return urlPattern.test(url);
+  };
 
-    const addLink = () => {
-        if (newLink.trim() === '') {
+  const addLink = () => {
+    if (newLink.trim() !== '') {
+      if (validateUrl(newLink)) {
         setLinks([...links, newLink]);
         setNewLink('');
         setError('');
-        } else {
-          setError('Invalid URL format');
-        }
-      }  
-    };  
+      } else {
+        setError('Invalid URL format');
+      }
+    }
+  };
 
-
-const deleteLink = (index) => {
+  const deleteLink = (index) => {
     const updatedLinks = links.filter((_, i) => i !== index);
     setLinks(updatedLinks);
-};
+  };
 
-return (
+  return (
     <div>
       <h2>Links</h2>
       <input
@@ -39,14 +39,15 @@ return (
         onChange={(e) => setNewLink(e.target.value)}
       />
       <button onClick={addLink}>Add Link</button>
-      <ul>
-        {links.map((link, index) => (
-          <li key={index}>
-            {link}
-            <button onClick={() => deleteLink(index)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+    {error && <p style={{ color: 'red' }}>{error}</p>}
+    <ul>
+      {links.map((link, index) => (
+        <li key={index}>
+          {link}
+          <button onClick={() => deleteLink(index)}>Delete</button>
+        </li>
+      ))}
+    </ul>
     </div>
   );
 };
