@@ -1,5 +1,7 @@
 // Links.js
 import React, { useState } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 
 const Links = () => {
   const [links, setLinks] = useState([]);
@@ -25,6 +27,16 @@ const Links = () => {
     }
   };
 
+  const handleDragEnd = (result) => {
+    if (!result.destination) return; // Item was dropped outside a valid drop target
+
+    const updatedLinks = Array.from(links);
+    const [reorderedLink] = updatedLinks.splice(result.source.index, 1);
+    updatedLinks.splice(result.destination.index, 0, reorderedLink);
+
+    setLinks(updatedLinks);
+  };
+
   const deleteLink = (index) => {
     const updatedLinks = links.filter((_, i) => i !== index);
     setLinks(updatedLinks);
@@ -40,14 +52,29 @@ const Links = () => {
       />
       <button onClick={addLink}>Add Link</button>
     {error && <p style={{ color: 'red' }}>{error}</p>}
-    <ul>
-      {links.map((link, index) => (
-        <li key={index}>
-          {link}
-          <button onClick={() => deleteLink(index)}>Delete</button>
-        </li>
-      ))}
-    </ul>
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <Droppable droppableId="links">
+        {(provided) => (
+         <ul {...provided.droppableProps} ref={provided.innerRef}>
+           {links.map((link, index) => (
+             <Draggable key={index} draggableId={link} index={index}>
+               {(provided) => (
+                 <li
+                   ref={provided.innerRef}
+                   {...provided.draggableProps}
+                   {...provided.dragHandleProps}
+                 >
+                   {link}
+                   <button onClick={() => deleteLink(index)}>Delete</button>
+                 </li>
+               )}
+             </Draggable>
+           ))}
+           {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
+    </DragDropContext>
     </div>
   );
 };
