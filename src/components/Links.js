@@ -8,6 +8,17 @@ const Links = () => {
   const [newLink, setNewLink] = useState('');
   const [error, setError] = useState('');
 
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return; // dropped outside the list
+
+    const updatedLinks = Array.from(links);
+    const [reorderedItem] = updatedLinks.splice(result.source.index, 1);
+    updatedLinks.splice(result.destination.index, 0, reorderedItem);
+
+    setLinks(updatedLinks);
+  };
+
+
   const validateUrl = (url) => {
     // Regular expression for basic URL validation
     const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w.-]*)*\/?$/;
@@ -51,30 +62,30 @@ const Links = () => {
         onChange={(e) => setNewLink(e.target.value)}
       />
       <button onClick={addLink}>Add Link</button>
-    {error && <p style={{ color: 'red' }}>{error}</p>}
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <Droppable droppableId="links">
-        {(provided) => (
-         <ul {...provided.droppableProps} ref={provided.innerRef}>
-           {links.map((link, index) => (
-             <Draggable key={index} draggableId={link} index={index}>
-               {(provided) => (
-                 <li
-                   ref={provided.innerRef}
-                   {...provided.draggableProps}
-                   {...provided.dragHandleProps}
-                 >
-                   {link}
-                   <button onClick={() => deleteLink(index)}>Delete</button>
-                 </li>
-               )}
-             </Draggable>
-           ))}
-           {provided.placeholder}
-          </ul>
-        )}
-      </Droppable>
-    </DragDropContext>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="links">
+          {(provided) => (
+            <ul {...provided.droppableProps} ref={provided.innerRef}>
+              {links.map((link, index) => (
+                <Draggable key={index} draggableId={index.toString()} index={index}>
+                  {(provided) => (
+                    <li
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      {link}
+                      <button onClick={() => deleteLink(index)}>Delete</button>
+                    </li>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 };
